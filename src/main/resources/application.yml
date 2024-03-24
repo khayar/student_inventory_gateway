@@ -2,7 +2,9 @@ server:
   port: 8000
 spring:
   application:
-    name: GATEWAY
+    name: gateway
+  config:
+    import: 'consul:'
   cloud:
     loadbalancer:
       ribbon:
@@ -16,9 +18,9 @@ spring:
 
     gateway:
       routes:
-        - id: STUDENT-SERVICE
+        - id: student
           #uri: http://localhost:8080/
-          uri: lb://STUDENT-SERVICE
+          uri: lb://student
           predicates:
             - Path=/student/**,/items/**,/receipt/**,/receiptInfo/**,/studentItemsReceipt/**
 
@@ -37,9 +39,29 @@ spring:
               retries: 3
               methods: GET,POST
 
+amqp:
+  exchange:
+    items: myqueue
+
 #logging:
 #  level:
 #    org:
 #      hibernate: 'DEBUG '
 #      springframework:
 #        web: DEBUG
+
+logging:
+  level:
+    org:
+      springframework:
+        amqp:
+          rabbit:
+            core:
+              RabbitAdmin: DEBUG
+            connection:
+              CachingConnectionFactory: WARN
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
