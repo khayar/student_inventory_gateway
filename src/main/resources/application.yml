@@ -23,6 +23,8 @@ spring:
           uri: lb://student
           predicates:
             - Path=/student/**,/items/**,/receipt/**,/receiptInfo/**,/studentItemsReceipt/**
+          filters:
+            - AuthenticationFilter
 
       globalcors:
         #add-to-simple-url-handler-mapping: true
